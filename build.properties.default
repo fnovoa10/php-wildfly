@@ -1,0 +1,25 @@
+# -----------------------------------------------------------------------------
+# build.properties.default
+#
+# This is an example "build.properties" file, used to customize building the php
+# package.
+#
+# $Id: build.properties.default 4783 2006-06-20 07:19:31Z mladen.turk@jboss.com $
+# -----------------------------------------------------------------------------
+
+# ----- Vesion Control Flags -----
+version.major=1
+version.minor=0
+version.build=1
+version.patch=dev
+
+# ----- Vesion Control Flags -----
+jboss.version.major=4
+jboss.version.minor=0
+jboss.version.build=4
+jboss.version.patch=GA
+
+# ----- Compile Control Flags -----
+compile.debug=on
+compile.deprecation=off
+compile.optimize=off
