@@ -1,0 +1,25 @@
+<project name="JBoss Web PHP demo" default="build" basedir=".">
+
+  <property file="../../../../build.properties.default"/>
+
+  <target name="build">
+    <war destfile="php-examples.war" webxml="php.xml">
+      <fileset dir="../../examples/php">
+        <include name="**/*.php"/>
+        <include name="**/*.ttf"/>
+      </fileset>
+      <lib dir="../../../../output/jbossweb-${version.major}.${version.minor}.${version.build}.${version.patch}/server/default/deploy/jbossweb.sar">
+        <include name="**/servlets-php.jar"/>
+      </lib>
+      <metainf dir="../../examples/php/metainf">
+        <include name="**/context.xml"/>
+      </metainf>
+      <!-- No class needed
+      <classes dir="../../../../output/classes/org/apache/catalina/servlets/php">
+        <include name="**/Handler.class"/>
+      </classes>
+       -->
+    </war>
+  </target>
+
+</project>
