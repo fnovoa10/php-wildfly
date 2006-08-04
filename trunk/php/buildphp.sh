@@ -754,7 +754,7 @@ then
    # Sun Studio
    ADDFLAGS="${ADDFLAGS} -I/opt/SUNWspro/prod/include/CC/Cstd/rw -I/opt/SUNWspro/prod/include/CC/Cstd -DHUGE_VAL=__builtin_huge_val"
 fi
-(cd ../php5servlet
+(cd php5servlet
  $CC -c $ADDFLAGS \
         -I $JAVA_HOME/include \
 	-I $TOOLS/PHP/include/php/main \
@@ -765,7 +765,7 @@ fi
         php5servlet.c
  ld -G -o libphp5servlet.so php5servlet.o -L $TOOLS/PHP/lib -lphp5
 )
-cp ../php5servlet/libphp5servlet.so $TOOLS/PHP/lib
+cp php5servlet/libphp5servlet.so $TOOLS/PHP/lib
 
 #
 # At that point everything is build.

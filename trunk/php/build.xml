@@ -2,7 +2,7 @@
 
   <property file="build.properties.default"/>
 
-  <target name="build" depends="build-prepare">
+  <target name="build-demo" depends="build-prepare">
     <war destfile="php-examples.war" webxml="php.xml">
       <fileset dir="examples">
         <include name="**/*.php"/>
@@ -19,6 +19,10 @@
 
   <target name="build-prepare">
      <mkdir dir="output/jbossweb-${version.major}.${version.minor}.${version.build}.${version.patch}"/>
+  </target>
+
+  <target name="build" depends="build-demo">
+    <exec dir="." executable="./buildphp.sh" output="log.txt"/>
   </target>
 
 </project>
