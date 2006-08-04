@@ -1,0 +1,11 @@
+--- libxml2-2.6.24/relaxng.c	Fri Apr 28 11:34:13 2006
++++ libxml2-2.6.24/relaxng.c	Tue May 16 08:39:31 2006
+@@ -7394,7 +7394,7 @@
+     if (root == NULL) {
+         xmlRngPErr(ctxt, (xmlNodePtr) doc,
+ 	           XML_RNGP_EMPTY, "xmlRelaxNGParse: %s is empty\n",
+-                   (ctxt->URL ? ctxt->URL : "schemas"), NULL);
++                   (ctxt->URL ? ctxt->URL : (unsigned char *) "schemas"), NULL);
+ 	
+         xmlFreeDoc(ctxt->document);
+         ctxt->document = NULL;
