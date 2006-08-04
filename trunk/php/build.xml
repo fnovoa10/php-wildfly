@@ -1,25 +1,24 @@
 <project name="JBoss Web PHP demo" default="build" basedir=".">
 
-  <property file="../../../../build.properties.default"/>
+  <property file="build.properties.default"/>
 
-  <target name="build">
+  <target name="build" depends="build-prepare">
     <war destfile="php-examples.war" webxml="php.xml">
-      <fileset dir="../../examples/php">
+      <fileset dir="examples">
         <include name="**/*.php"/>
         <include name="**/*.ttf"/>
       </fileset>
-      <lib dir="../../../../output/jbossweb-${version.major}.${version.minor}.${version.build}.${version.patch}/server/default/deploy/jbossweb.sar">
+      <lib dir="output/jbossweb-${version.major}.${version.minor}.${version.build}.${version.patch}">
         <include name="**/servlets-php.jar"/>
       </lib>
-      <metainf dir="../../examples/php/metainf">
+      <metainf dir="examples/metainf">
         <include name="**/context.xml"/>
       </metainf>
-      <!-- No class needed
-      <classes dir="../../../../output/classes/org/apache/catalina/servlets/php">
-        <include name="**/Handler.class"/>
-      </classes>
-       -->
     </war>
+  </target>
+
+  <target name="build-prepare">
+     <mkdir dir="output/jbossweb-${version.major}.${version.minor}.${version.build}.${version.patch}"/>
   </target>
 
 </project>
