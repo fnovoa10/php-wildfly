@@ -13,6 +13,7 @@
     <welcome-file>index.php</welcome-file>
   </welcome-file-list>
 
+  <!-- Servlet definition is a already done in ROOT.war
   <servlet>
     <servlet-name>php</servlet-name>
     <servlet-class>org.apache.catalina.servlets.php.Handler</servlet-class>
@@ -26,6 +27,7 @@
       <servlet-name>phps</servlet-name>
       <servlet-class>org.apache.catalina.servlets.php.Highlight</servlet-class>
   </servlet>
+   -->
 
   <servlet-mapping>
       <servlet-name>php</servlet-name>
