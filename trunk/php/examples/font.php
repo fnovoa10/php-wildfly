@@ -12,13 +12,19 @@
   // The fonts are needed to have the nice letters.
   $fontdir = "webapps/php-examples/";
 
+  // Try to find the font in diffent locations.
+  //    $font ="shlyalln.ttf";
+  $p = getcwd();
+  $font = $p."/".$fontdir."dauphinn.ttf";
+  if (!file_exists($font)) {
+    $font =$p."/dauphinn.ttf";  
+    if (!file_exists($font)) {
+      die("Can't find $font");
+    }
+  }
+
   if (!isset($height))
     $height=60;
-
-  if (isset($script) && $script)
-    $font = $fontdir."shlyalln.ttf";
-  else
-    $font = $fontdir."dauphinn.ttf";
 
   if ( ! ($host = gethostbyaddr($_SERVER["REMOTE_ADDR"])))
     $host = $_SERVER["REMOTE_ADDR"];
