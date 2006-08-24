@@ -823,8 +823,7 @@ fi
 #
 # Build the war file with the demo
 ant
-mkdir -p $TOOLS/webapps
-cp -p php-examples.war $TOOLS/webapps
+cp -p php-examples.war $TOOLS
 
 #
 # Build a tarball with the all stuff
