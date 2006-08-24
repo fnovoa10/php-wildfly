@@ -183,7 +183,12 @@ rm -f ${BASDIR}/${SUBDIR}/config.status
    # On Solaris the libtool of old packages is broken
    # It does not build shared libraries.
    echo "Copying libtool" 
-   cp $TOOLS/bin/libtool .
+   if [ -f $TOOLS/bin/libtool ]
+   then
+     cp $TOOLS/bin/libtool .
+   else
+     echo "$TOOLS/bin/libtool doesn't exist" 
+   fi
  esac
  make clean
  if [ $? -ne 0 ]
