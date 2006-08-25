@@ -13,9 +13,9 @@
     <welcome-file>index.php</welcome-file>
   </welcome-file-list>
 
-  <!-- Servlet definition is a already done in ROOT.war
+  <!-- Servlet definition is a already done in ROOT.war -->
   <servlet>
-    <servlet-name>php</servlet-name>
+    <servlet-name>demophp</servlet-name>
     <servlet-class>org.apache.catalina.servlets.php.Handler</servlet-class>
     <init-param>
       <param-name>debug</param-name>
@@ -24,17 +24,16 @@
       <load-on-startup>6</load-on-startup>
   </servlet>
   <servlet>
-      <servlet-name>phps</servlet-name>
+      <servlet-name>demophps</servlet-name>
       <servlet-class>org.apache.catalina.servlets.php.Highlight</servlet-class>
   </servlet>
-   -->
 
   <servlet-mapping>
-      <servlet-name>php</servlet-name>
+      <servlet-name>demophp</servlet-name>
       <url-pattern>*.php</url-pattern>
   </servlet-mapping>
     <servlet-mapping>
-      <servlet-name>phps</servlet-name>
+      <servlet-name>demophps</servlet-name>
       <url-pattern>*.phps</url-pattern>
   </servlet-mapping>
 </web-app>
