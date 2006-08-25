@@ -225,8 +225,7 @@ Copy()
 
 #
 # Allow to parameters to the build
-n=$#
-for ((i=0 ; i<$n ; i=`expr $i + 1`))
+while [ "x" != "x$1" ]
 do
   case $1 in
     ALL)
