@@ -827,7 +827,7 @@ fi
 
 #
 # Build the war file with the demo
-ant
+ant build-demo
 cp -p php-examples.war $TOOLS
 
 #
