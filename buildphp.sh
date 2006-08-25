@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 #
 # JBoss, the OpenSource J2EE webOS
 #
