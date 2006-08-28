@@ -240,7 +240,7 @@ do
       ALLOWCRYPTO=true
       ;;
     *)
-      echo "$i: not (yet) supported"
+      echo "$1: not (yet) supported"
   esac
   shift
 done
