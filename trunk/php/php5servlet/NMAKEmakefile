@@ -29,7 +29,7 @@ BUILDIR_EXT = DLL
 PROJECT = php5servlet
 PHP5_LIB = php5ts.lib
 
-!include <NMAKEcommon.inc>
+!include <../../build/NMAKEcommon.inc>
 
 CFLAGS = $(CFLAGS) -DPHP5SERVLET_EXPORTS -DZTS -DZEND_WIN32 -DPHP_WIN32
 
