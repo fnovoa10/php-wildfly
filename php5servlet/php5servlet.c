@@ -56,6 +56,7 @@
         jclass _##C = (*(E))->FindClass((E), N);    \
         if (_##C == NULL) {                         \
             (*(E))->ExceptionClear((E));            \
+            jniThrowIOException(E, "Can't find SAPI class"); \
             return R;                               \
         }                                           \
         C = (*(E))->NewGlobalRef((E), _##C);        \
@@ -770,8 +771,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
         jni_SAPI_methods[i].m = (*env)->GetStaticMethodID(env, jni_SAPI_class,
                                                           jni_SAPI_methods[i].n,
                                                           jni_SAPI_methods[i].s);
-        if (jni_SAPI_methods[i].m == NULL)
+        if (jni_SAPI_methods[i].m == NULL) {
+            jniThrowIOException(E, "Can't find method of SAPI class");
             return JNI_ERR;
+        }
         i++;
     }
 
