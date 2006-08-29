@@ -22,7 +22,8 @@
   </target>
 
   <target name="build" depends="build-demo">
-    <exec dir="." executable="./buildphp.sh" output="log.txt" failonerror="true" error="err.txt" />
+    <tstamp/>
+    <exec dir="." executable="./buildphp.sh" output="log.${DSTAMP}${TSTAMP}" failonerror="true" error="err.${DSTAMP}${TSTAMP}" />
   </target>
 
 </project>
