@@ -772,7 +772,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
                                                           jni_SAPI_methods[i].n,
                                                           jni_SAPI_methods[i].s);
         if (jni_SAPI_methods[i].m == NULL) {
-            jniThrowIOException(E, "Can't find method of SAPI class");
+            jniThrowIOException(env, "Can't find method of SAPI class");
             return JNI_ERR;
         }
         i++;
