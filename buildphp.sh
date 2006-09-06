@@ -769,7 +769,13 @@ fi
         php5servlet.c
  ld -G -o libphp5servlet.so php5servlet.o -L $TOOLS/PHP/lib -lphp5
 )
-cp php5servlet/libphp5servlet.so $TOOLS/PHP/lib
+if [ -f php5servlet/libphp5servlet.so ]
+then
+  cp php5servlet/libphp5servlet.so $TOOLS/PHP/lib
+else
+  echo "libphp5servlet.so wasn't build, aborting..."
+  exit 1
+fi
 
 #
 # At that point everything is build.
