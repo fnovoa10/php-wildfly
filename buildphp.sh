@@ -187,7 +187,21 @@ rm -f ${BASDIR}/${SUBDIR}/config.status
    then
      cp $TOOLS/bin/libtool .
    else
-     echo "$TOOLS/bin/libtool doesn't exist" 
+     # Use the system libtool on Linux
+     if [ $OS == Linux ]
+     then
+       LIBTOOL=`which libtool`
+       if [ -f $LIBTOOL ]
+       then
+         cp $LIBTOOL .
+       else
+         echo "$TOOLS/bin/libtool doesn't exist" 
+         exit 1
+       fi
+     else
+       echo "$TOOLS/bin/libtool doesn't exist" 
+       exit 1
+     fi
    fi
  esac
  make clean
