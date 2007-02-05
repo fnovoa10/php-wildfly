@@ -783,6 +783,17 @@ fi
         php5servlet.c
  ld -G -o libphp5servlet.so php5servlet.o -L $TOOLS/PHP/lib -lphp5
 )
+echo "\
+$CC -c $ADDFLAGS \
+       -I $JAVA_HOME/include \
+       -I $TOOLS/PHP/include/php/main \
+       -I $TOOLS/PHP/include/php/Zend \
+       -I $TOOLS/PHP/include/php/TSRM \
+       -I $TOOLS/PHP/include/php \
+       -DZTS -DPTHREADS \
+       php5servlet.c
+ld -G -o libphp5servlet.so php5servlet.o -L $TOOLS/PHP/lib -lphp5
+" > php5servlet/Make.sh
 if [ -f php5servlet/libphp5servlet.so ]
 then
   cp php5servlet/libphp5servlet.so $TOOLS/PHP/lib
