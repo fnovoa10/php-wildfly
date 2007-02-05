@@ -477,7 +477,7 @@ static void sapi_servlet_register_variables(zval *track_vars_array TSRMLS_DC)
 
     r = SG(server_context);
     /* If we haven't registered a server_context,
-     * then don't bother reding headers. */
+     * then don't bother reading headers. */
     if (!r) {
         return;
     }
