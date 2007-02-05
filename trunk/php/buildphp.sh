@@ -663,6 +663,8 @@ fi
   --cache-file=$CACHE \
   --with-tsrm-pthreads --enable-shared \
   --enable-embed=shared \
+  --enable-maintainer-zts \
+  \
   --with-kerberos \
   --with-imap-ssl \
   --with-zlib-dir \
@@ -713,9 +715,7 @@ fi
   \
   --with-msql=no \
   \
-  ${ADDCONF} \
-  \
-  --enable-maintainer-zts
+  ${ADDCONF}
 )
 if [ $? -ne 0 ]
 then
