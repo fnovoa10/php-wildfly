@@ -88,6 +88,14 @@
 
 #define STR_TO_JSTRING(V)   (*e)->NewStringUTF((e), (V))
 
+/* We allocate those on our pool so we have prevent php cleaning them in its pool (efree()) */
+#define CLEAN_REQUEST_INFO(V) \
+    SG(V).request_method = NULL; \
+    SG(V).query_string = NULL; \
+    SG(V).content_type = NULL; \
+    SG(V).auth_user = NULL; \
+    SG(V).request_uri = NULL; \
+    SG(V).path_translated = NULL
 
 static jclass jni_SAPI_class = NULL;
 
@@ -680,6 +688,7 @@ JPHP_IMPLEMENT_CALL(jint, Handler, php)(JPHP_STDARGS,
             }
         }
         request->in_shutdown = 1;
+        CLEAN_REQUEST_INFO(request_info);
         php_request_shutdown(NULL);
         /* Destroy the request */
         SG(server_context) = NULL;
@@ -687,7 +696,9 @@ JPHP_IMPLEMENT_CALL(jint, Handler, php)(JPHP_STDARGS,
         pool = NULL;
     } zend_catch {
         zend_try {
-            php_request_shutdown(NULL);
+            CLEAN_REQUEST_INFO(request_info);
+            if (!request->in_shutdown) 
+                php_request_shutdown(NULL);
             if (pool) {
                 spdestroy(pool);
                 pool = NULL;
