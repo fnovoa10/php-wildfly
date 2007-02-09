@@ -1,0 +1,4 @@
+The servlet sources are located in 
+http://svn.jboss.org/repos/jbossweb/trunk/src/share/classes/org/jboss/web/php
+
+There is no makefile but a  Make.sh is created when running ant in ..
