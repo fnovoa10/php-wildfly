@@ -97,6 +97,11 @@ esac
 if [ ! -f ${FILE} ]
 then
   wget ${URL}
+  if [ $? -ne 0 ]
+  then
+    echo "wget of ${URL} failed"
+    exit 1
+  fi
 fi
 if [ ! -d ${BASE}-${VER} ]
 then
@@ -152,6 +157,11 @@ then
   SRCDIR=${BASDIR}
 else
   SRCDIR=${BASDIR}/${SUBDIR}
+fi
+if [ ! -d ${SRCDIR} ]
+then
+  echo "Can't find ${SRCDIR}"
+  exit 1
 fi
 rm -f ${BASDIR}/${SUBDIR}/config.cache
 rm -f ${BASDIR}/${SUBDIR}/config.status
