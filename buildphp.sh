@@ -15,7 +15,7 @@ PHPURL=http://de.php.net/distributions/php-${PHPVER}.tar.gz
 XML2VER=2.6.24
 XML2URL=ftp://xmlsoft.org/libxml2/libxml2-${XML2VER}.tar.gz
 
-PSQLVER=8.1.6
+PSQLVER=8.1.8
 PSQLURL=http://wwwmaster.postgresql.org/redir?ftp://ftp2.ch.postgresql.org/pub/postgresql/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
 
 OSSLVER="0.9.8b"
