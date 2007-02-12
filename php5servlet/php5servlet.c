@@ -95,7 +95,8 @@
     SG(V).content_type = NULL; \
     SG(V).auth_user = NULL; \
     SG(V).request_uri = NULL; \
-    SG(V).path_translated = NULL
+    SG(V).path_translated = NULL; \
+    SG(V).cookie_data = NULL
 
 static jclass jni_SAPI_class = NULL;
 
@@ -459,7 +460,7 @@ static char *sapi_servlet_read_cookies(TSRMLS_D)
     /* If we haven't registered a server_context,
      * then don't bother reading cookies. */
     if (!r) {
-        return STR_EMPTY_ALLOC();
+        return spstrdup(r->p, "");
     }
     e = r->e;
     cookie = (*e)->CallStaticObjectMethod(e, jni_SAPI_class,
@@ -472,7 +473,7 @@ static char *sapi_servlet_read_cookies(TSRMLS_D)
         JPHP_FREE_CSTRING(cookie);
         return rv;
     }
-    return STR_EMPTY_ALLOC();
+    return spstrdup(r->p, "");
 }
 
 
@@ -555,6 +556,7 @@ static void sapi_servlet_log_message(char *msg)
         return;
     }
     e = r->e;
+    fprintf(stderr, msg);
     /*
      * TODO: Log the message
     (*e)->CallStaticVoidMethod(e, jni_SAPI_class,
