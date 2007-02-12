@@ -665,6 +665,8 @@ then
    # Sun Studio
    CC=cc
    export CC
+   CXX=CC
+   export CXX
    #CPPFLAGS="-I/opt/SUNWspro/prod/include/CC/Cstd/rw -I/opt/SUNWspro/prod/include/CC/Cstd -DHUGE_VAL=__builtin_huge_val"
    #export CPPFLAGS
 fi
