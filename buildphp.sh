@@ -670,6 +670,9 @@ then
    #CPPFLAGS="-I/opt/SUNWspro/prod/include/CC/Cstd/rw -I/opt/SUNWspro/prod/include/CC/Cstd -DHUGE_VAL=__builtin_huge_val"
    #export CPPFLAGS
 fi
+# If you need to debug add
+#  --enable-debug \
+#
 (cd php-${PHPVER}
  ./configure --prefix=$TOOLS/PHP \
   --cache-file=$CACHE \
