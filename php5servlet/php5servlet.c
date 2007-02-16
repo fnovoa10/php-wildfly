@@ -363,7 +363,7 @@ static int sapi_servlet_header_handler(sapi_header_struct *sapi_header,
     /* If we haven't registered a server_context,
      * then don't bother sending header. */
     if (!r) {
-        return SAPI_HEADER_ADD;
+        return 0;
     }
     e = r->e;
     val = strchr(sapi_header->header, ':');
