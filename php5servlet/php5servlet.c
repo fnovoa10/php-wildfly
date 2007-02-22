@@ -99,6 +99,7 @@
     SG(V).cookie_data = NULL
 
 static jclass jni_SAPI_class = NULL;
+static int php_module_started = 0;
 
 static struct {
     jmethodID   m;
@@ -295,7 +296,7 @@ static void php_info_servlet(ZEND_MODULE_INFO_FUNC_ARGS)
 
     /* If we haven't registered a server_context yet,
      * then don't bother obtaining info. */
-    if (!r) {
+    if (!r || !php_module_started) {
         return;
     }
     e = r->e;
@@ -330,7 +331,7 @@ static int sapi_servlet_ub_write(const char *str, uint str_length TSRMLS_DC)
 
     /* If we haven't registered a server_context yet,
      * then don't bother writting. */
-    if (!r) {
+    if (!r || !php_module_started) {
         return str_length;
     }
     e = r->e;
@@ -362,7 +363,7 @@ static int sapi_servlet_header_handler(sapi_header_struct *sapi_header,
 
     /* If we haven't registered a server_context,
      * then don't bother sending header. */
-    if (!r) {
+    if (!r || !php_module_started) {
         return 0;
     }
     e = r->e;
@@ -392,7 +393,7 @@ static int sapi_servlet_send_headers(sapi_headers_struct *sapi_headers TSRMLS_DC
     servlet_request *r = SG(server_context);
     JNIEnv *e;
 
-    if (!r) {
+    if (!r || !php_module_started) {
         return SAPI_HEADER_SENT_SUCCESSFULLY;
     }
     e = r->e;
@@ -425,7 +426,7 @@ static int sapi_servlet_read_post(char *buffer, uint count_bytes TSRMLS_DC)
     /* If there is no server_context,
      * or we are in request shutdown, then don't bother reading.
      */
-    if (r == NULL || r->in_shutdown) {
+    if (r == NULL || r->in_shutdown || !php_module_started) {
         return 0;
     }
     e = r->e;
@@ -459,7 +460,7 @@ static char *sapi_servlet_read_cookies(TSRMLS_D)
 
     /* If we haven't registered a server_context,
      * then don't bother reading cookies. */
-    if (!r) {
+    if (!r || !php_module_started) {
         return spstrdup(r->p, "");
     }
     e = r->e;
@@ -487,7 +488,7 @@ static void sapi_servlet_register_variables(zval *track_vars_array TSRMLS_DC)
     r = SG(server_context);
     /* If we haven't registered a server_context,
      * then don't bother reading headers. */
-    if (!r) {
+    if (!r || !php_module_started) {
         return;
     }
     e = r->e;
@@ -524,7 +525,7 @@ sapi_servlet_flush(void *server_context)
     r = server_context;
     /* If we haven't registered a server_context yet,
      * then don't bother flushing. */
-    if (!server_context) {
+    if (!server_context || !php_module_started) {
         return;
     }
     e = r->e;
@@ -552,7 +553,7 @@ static void sapi_servlet_log_message(char *msg)
 
     /* If we haven't registered a server_context,
      * then don't bother logging. */
-    if (!r) {
+    if (!r || !php_module_started) {
         return;
     }
     e = r->e;
@@ -631,7 +632,7 @@ JPHP_IMPLEMENT_CALL(jint, Handler, php)(JPHP_STDARGS,
     TSRMLS_FETCH();
 
     zend_first_try {
-        if ((pool = spnew()) == NULL) {
+        if (!php_module_started || ((pool = spnew()) == NULL)) {
             zend_bailout();
             return -1;
         }
@@ -699,7 +700,7 @@ JPHP_IMPLEMENT_CALL(jint, Handler, php)(JPHP_STDARGS,
     } zend_catch {
         zend_try {
             CLEAN_REQUEST_INFO(request_info);
-            if (!request->in_shutdown) 
+            if (!request->in_shutdown)
                 php_request_shutdown(NULL);
             if (pool) {
                 spdestroy(pool);
@@ -711,9 +712,6 @@ JPHP_IMPLEMENT_CALL(jint, Handler, php)(JPHP_STDARGS,
 
     return 0;
 }
-
-static int php_module_started = 0;
-
 
 JPHP_IMPLEMENT_CALL(jint, Library, version)(JPHP_STDARGS, jint what)
 {
