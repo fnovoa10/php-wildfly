@@ -327,6 +327,7 @@ then
           --with-mysqli \
           --with-mysql \
           --with-pdo-mysql \
+          --enable-thread-safe-client \
           "
 else
   ADDCONF="$ADDCONF \
