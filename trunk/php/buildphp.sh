@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 #
 # JBoss, the OpenSource J2EE webOS
 #
@@ -50,9 +50,26 @@ FTT2URL=http://switch.dl.sourceforge.net/sourceforge/freetype/freetype-${FTT2VER
 LBGDVER=2.0.28
 LBGDURL=http://www.boutell.com/gd/http/gd-${LBGDVER}.tar.gz
 
+LZVER=1.2.3
+LZURL=http://www.gzip.org/zlib/zlib-${LZVER}.tar.gz
+
+MAKE=make
+
 # Platfrom directory and cache
-TOOLS=$HOME/`uname -s`_`uname -p`_tools
-CACHE=`uname -s`_`uname -p`_cache
+OS=`uname -s`
+case $OS in
+  HP-UX)
+    TOOLS=$HOME/`uname -s`_`uname -m`_tools
+    CACHE=`uname -s`_`uname -m`_cache
+    PR=`uname -m`
+    ;;
+  *)
+    TOOLS=$HOME/`uname -s`_`uname -p`_tools
+    CACHE=`uname -s`_`uname -p`_cache
+    PR=`uname -p`
+    ;;
+esac
+CACHE=`echo ${CACHE} | sed 's:/:_:g'`
 
 # default value for variables.
 BUILDKRB5=true
@@ -67,6 +84,7 @@ BUILDLDAP=true
 BUILDICNV=false
 BUILDFTT2=false
 BUILDLBGD=true
+BUILDLZ=false
 CC=gcc
 COMPILER=""
 ADDCONF=""
@@ -193,12 +211,13 @@ rm -f ${BASDIR}/${SUBDIR}/config.status
    # On Solaris the libtool of old packages is broken
    # It does not build shared libraries.
    echo "Copying libtool" 
+   mkdir -p $TOOLS/bin
    if [ -f $TOOLS/bin/libtool ]
    then
      cp $TOOLS/bin/libtool .
    else
      # Use the system libtool on Linux
-     if [ $OS == Linux ]
+     if [ $OS = Linux ]
      then
        LIBTOOL=`which libtool`
        if [ -f $LIBTOOL ]
@@ -214,19 +233,19 @@ rm -f ${BASDIR}/${SUBDIR}/config.status
      fi
    fi
  esac
- make clean
+ ${MAKE} clean
  if [ $? -ne 0 ]
  then
    echo "Make clean in ${SRCDIR} failed"
    exit 1
  fi
- make 
+ ${MAKE} 
  if [ $? -ne 0 ]
  then
    echo "Make in ${SRCDIR} failed"
    exit 1
  fi
- make install
+ ${MAKE} install
  if [ $? -ne 0 ]
  then
    echo "Make install in ${SRCDIR} failed"
@@ -253,12 +272,12 @@ while [ "x" != "x$1" ]
 do
   case $1 in
     ALL)
-      BUILDMSQL=true
       BUILDICNV=true
       BUILDFTT2=true
       BUILDPSQL=true
       BUILDJPEG=true
       BUILDMSQL=true
+      BUILDLZ=true
       ;;
     CRYPT)
       ALLOWCRYPTO=true
@@ -281,8 +300,6 @@ fi
 
 #
 # depending on machine remove or add php extensions.
-OS=`uname -s`
-PR=`uname -p`
 
 # try to find mysql
 MYSQLDIR=
@@ -301,20 +318,23 @@ case ${OS} in
     MYSQL="mysql-standard-${MSQLVER}-${MSQLHD}-${MSQLSY}${MSQLPR}-${PR}"
     ;;
   Linux)
-    MSQLSY=solaris
     MSQLHD=pc
     MSQLSY=linux-gnu
     MYSQL="mysql-standard-${MSQLVER}-${MSQLHD}-${MSQLSY}${MSQLPR}-${PR}-glibc23"
     ;;
 esac
 
-for dir in $HOME/${MYSQL} /usr/${MYSQL} /opt/${MYSQL} /opt/i86pc/${MYSQL}
-do
-  if [ -d $dir ]
-  then
-    MYSQLDIR=${dir}
-  fi
-done
+# Try some fixed locations for mysql.
+if [ ! -z ${MYSQL} ]
+then
+  for dir in $HOME/${MYSQL} /usr/${MYSQL} /opt/${MYSQL} /opt/i86pc/${MYSQL}
+  do
+    if [ -d $dir ]
+    then
+      MYSQLDIR=${dir}
+    fi
+  done
+fi
 
 # overwrite the result when we force the build
 if ${BUILDMSQL}
@@ -323,12 +343,24 @@ then
 fi
 if [ -z "${MYSQLDIR}" ]
 then
-  ADDCONF="$ADDCONF \
-          --with-mysqli \
-          --with-mysql \
-          --with-pdo-mysql \
-          --enable-thread-safe-client \
-          "
+  MYSQLI=`which mysql_config`
+  if [ -z "${MYSQLI}" ]
+  then
+    echo "mysql_config not found not MYSQL support"
+  else
+    # as we enable --enable-maintainer-zts check mysql is ok for it
+    MYSQLLIBSR=`mysql_config --libs_r`
+    if [ -z "${MYSQLLIBSR}" ]
+    then
+      echo "the installed MYSQL can't be used: not threaded"
+    else
+      ADDCONF="$ADDCONF \
+              --with-mysqli=${MYSQLI} \
+              --with-mysql \
+              --with-pdo-mysql \
+              "
+    fi
+  fi
 else
   ADDCONF="$ADDCONF \
           --with-mysqli=${MYSQLDIR}/bin/mysql_config \
@@ -372,6 +404,15 @@ case ${OS} in
     EXTTYPE=shared
     ADDFLAGS="-I $JAVA_HOME/include/solaris"
     ;;
+  HP-UX)
+    MAKE=gmake
+    GNUMAKE=gmake
+    export GNUMAKE
+    BUILDFTT2=true
+    BUILDLZ=true
+    # Broken Heimdal (free Kerberos)
+    ADDCONF="$ADDCONF --with-kerberos=no"
+    ;;
 esac
 case ${PR} in
   x86_64)
@@ -399,6 +440,16 @@ case ${PR} in
     fi
     ;;
 esac
+export MAKE
+
+#
+# build libz if required.
+if ${BUILDLZ}
+then
+  # Extract and Build.
+  Extract zlib ${LZURL} ${LZVER}
+  Build zlib-${LZVER} ${TOOLS}/LZ "--shared" "clean" ""
+fi
 
 #
 # build freetype2 if required.
@@ -434,7 +485,7 @@ fi
 if ${BUILDMSQL}
 then
   Extract mysql ${MSQLURL} ${MSQLVER}
-  Build mysql-${MSQLVER} ${TOOLS}/MSQL "--enable-shared" "clean" ""
+  Build mysql-${MSQLVER} ${TOOLS}/MSQL "--enable-shared --enable-thread-safe-client" "clean" ""
 fi
 
 #
@@ -508,6 +559,11 @@ fi
 if ${BUILDLBGD}
 then
   Extract gd ${LBGDURL} ${LBGDVER}
+  if ${BUILDLBGD}
+  then
+     LDFLAGS=-L$TOOLS/LZ/lib
+     export LDFLAGS
+  fi
   Build gd-${LBGDVER} ${TOOLS}/LBGD "--without-xpm $LGDCONF"  "clean" ""
   ADDCONF="$ADDCONF --with-gd=$TOOLS/LBGD \
           --enable-gd-native-ttf \
@@ -543,9 +599,9 @@ then
    else
      ./config --prefix=${TOOLS}/SSL threads no-zlib no-zlib-dynamic no-gmp no-krb5 no-rc5 no-mdc2 no-idea no-ec shared
    fi
-   make clean
-   make depend
-   make install
+   ${MAKE} clean
+   ${MAKE} depend
+   ${MAKE} install
    case ${PR} in
         x86_64)
           ln -s ${TOOLS}/SSL/lib ${TOOLS}/SSL/lib64
@@ -657,6 +713,8 @@ case ${PR} in
 esac
 
 # configure php
+BASDIR=php-${PHPVER}
+echo "************************* Configure in ${BASDIR} ********************"
 if ! ${ALLOWCRYPTO}
 then
   ADDCONF="$ADDCONF --without-iconv --without-kerberos --without-ldap-sasl --without-curl --without-bz2"
@@ -743,7 +801,7 @@ fi
 # Clean up the possible previous build
 rm -rf $TOOLS/PHP
 (cd php-${PHPVER}
-make clean
+${MAKE} clean
 )
 if [ $? -ne 0 ]
 then
@@ -760,7 +818,7 @@ fi
 
 
 (cd php-${PHPVER}
-make
+${MAKE}
 )
 if [ $? -ne 0 ]
 then
@@ -769,7 +827,7 @@ then
 fi
 
 (cd php-${PHPVER}
-make install
+${MAKE} install
 )
 if [ $? -ne 0 ]
 then
