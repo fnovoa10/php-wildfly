@@ -252,6 +252,10 @@ rm -f ${BASDIR}/${SUBDIR}/config.status
    exit 1
  fi
 )
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
 }
 
 #
