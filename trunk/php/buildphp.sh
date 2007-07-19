@@ -53,8 +53,6 @@ LBGDURL=http://www.boutell.com/gd/http/gd-${LBGDVER}.tar.gz
 LZVER=1.2.3
 LZURL=http://www.gzip.org/zlib/zlib-${LZVER}.tar.gz
 
-MAKE=make
-
 # Platfrom directory and cache
 OS=`uname -s`
 case $OS in
@@ -271,6 +269,36 @@ Copy()
 }
 
 #
+# Locate a GNU make in $PATH
+# $1 : The PATH already transformed. (list of directories).
+search_make()
+{
+  search="$*"
+  for d in $search; do
+    file=$d/make
+    $file --version 2>/dev/null | grep GNU >/dev/null
+    if [ $? -eq 0 ]; then
+      echo "Using $file as GNUMAKE"
+      GNUMAKE=$file
+      MAKE=$file
+      export GNUMAKE
+      export MAKE
+      break
+    fi
+    file=$d/gmake
+    $file --version 2>/dev/null | grep GNU >/dev/null
+    if [ $? -eq 0 ]; then
+      echo "Using $file as GNUMAKE"
+      GNUMAKE=$file
+      MAKE=$file
+      export GNUMAKE
+      export MAKE
+      break
+    fi
+  done
+}
+
+#
 # Allow to parameters to the build
 while [ "x" != "x$1" ]
 do
@@ -373,6 +401,13 @@ else
           "
 fi
 
+# Set MAKE and GNUMAKE
+make --version 2>/dev/null | grep GNU >/dev/null
+if [ $? -ne 0 ]; then
+  LOC=`echo "$PATH" | sed 's/:/ /g'`
+  search_make $LOC
+fi
+
 ADDCONF="$ADDCONF --with-t1lib=no"
 case ${OS} in
   Linux)     
@@ -444,7 +479,6 @@ case ${PR} in
     fi
     ;;
 esac
-export MAKE
 
 #
 # build libz if required.
