@@ -402,11 +402,8 @@ else
 fi
 
 # Set MAKE and GNUMAKE
-make --version 2>/dev/null | grep GNU >/dev/null
-if [ $? -ne 0 ]; then
-  LOC=`echo "$PATH" | sed 's/:/ /g'`
-  search_make $LOC
-fi
+LOC=`echo "$PATH" | sed 's/:/ /g'`
+search_make $LOC
 
 ADDCONF="$ADDCONF --with-t1lib=no"
 case ${OS} in
