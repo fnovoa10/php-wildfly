@@ -16,7 +16,7 @@
   <!-- Servlet definition is a already done in ROOT.war -->
   <servlet>
     <servlet-name>demophp</servlet-name>
-    <servlet-class>org.apache.catalina.servlets.php.Handler</servlet-class>
+    <servlet-class>org.jboss.web.php.Handler</servlet-class>
     <init-param>
       <param-name>debug</param-name>
       <param-value>0</param-value>
@@ -25,7 +25,7 @@
   </servlet>
   <servlet>
       <servlet-name>demophps</servlet-name>
-      <servlet-class>org.apache.catalina.servlets.php.Highlight</servlet-class>
+      <servlet-class>org.jboss.web.php.Highlight</servlet-class>
   </servlet>
 
   <servlet-mapping>
