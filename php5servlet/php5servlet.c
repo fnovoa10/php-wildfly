@@ -37,7 +37,7 @@
 #include <jni.h>
 
 #define JPHP_IMPLEMENT_CALL(RT, CL, FN)  \
-    JNIEXPORT RT JNICALL Java_org_apache_catalina_servlets_php_##CL##_##FN
+    JNIEXPORT RT JNICALL Java_org_jboss_web_php_##CL##_##FN
 
 #define JPHP_IMPLEMENT_METHOD(RT, FN)    \
     static RT method_##FN
@@ -117,7 +117,7 @@ static struct {
     {
         NULL,
         "log",
-        "(Lorg/apache/catalina/servlets/php/Handler;Ljava/lang/String;)V"
+        "(Lorg/jboss/web/php/Handler;Ljava/lang/String;)V"
     },
     {
         NULL,
@@ -137,12 +137,12 @@ static struct {
     {
         NULL,
         "env",
-        "(Lorg/apache/catalina/servlets/php/ScriptEnvironment;)[Ljava/lang/String;"
+        "(Lorg/jboss/web/php/ScriptEnvironment;)[Ljava/lang/String;"
     },
     {
         NULL,
         "cookies",
-        "(Lorg/apache/catalina/servlets/php/ScriptEnvironment;)Ljava/lang/String;"
+        "(Lorg/jboss/web/php/ScriptEnvironment;)Ljava/lang/String;"
     },
     {
         NULL,
@@ -776,7 +776,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
     /* Initialize global java.lang.String class */
     JPHP_LOAD_CLASS(env, jni_SAPI_class,
-                    "org/apache/catalina/servlets/php/SAPI",
+                    "org/jboss/web/php/SAPI",
                     JNI_ERR);
     while (jni_SAPI_methods[i].n) {
         jni_SAPI_methods[i].m = (*env)->GetStaticMethodID(env, jni_SAPI_class,
