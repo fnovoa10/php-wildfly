@@ -697,14 +697,8 @@ fi
 
 #
 # get and extract php
-if [ ! -f php-${PHPVER}.tar.gz ]
-then
-  wget $PHPURL
-fi
-if [ ! -d php-${PHPVER} ]
-then
-  gzip -dc php-${PHPVER}.tar.gz | tar xvf -
-fi
+Extract php $PHPURL $PHPVER
+
 echo "Adding to default configuration:: ${ADDCONF}"
 
 # remove the cache that save problems but use more time when building.
