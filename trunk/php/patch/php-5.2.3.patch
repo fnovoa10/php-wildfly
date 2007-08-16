@@ -1,11 +1,11 @@
---- Zend/zend_execute_API.c.org	2007-08-16 08:12:59.927931000 -0400
-+++ Zend/zend_execute_API.c	2007-08-16 08:12:27.225665000 -0400
-@@ -409,6 +409,8 @@
+--- php-5.2.3/Zend/zend_execute_API.c	2007-08-16 08:12:59.927931000 -0400
++++ php-5.2.3/Zend/zend_execute_API.c	2007-08-16 10:12:26.919010000 -0400
+@@ -406,6 +406,8 @@
+ 
+ ZEND_API void _zval_ptr_dtor(zval **zval_ptr ZEND_FILE_LINE_DC)
+ {
++        if (*zval_ptr == NULL)
++                return;
  #if DEBUG_ZEND>=2
  	printf("Reducing refcount for %x (%x):  %d->%d\n", *zval_ptr, zval_ptr, (*zval_ptr)->refcount, (*zval_ptr)->refcount-1);
  #endif
-+        if (*zval_ptr == NULL)
-+                return;
- 	(*zval_ptr)->refcount--;
- 	if ((*zval_ptr)->refcount==0) {
- 		zval_dtor(*zval_ptr);
