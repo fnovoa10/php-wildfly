@@ -1,0 +1,11 @@
+--- Zend/zend_execute_API.c.org	2007-08-16 08:12:59.927931000 -0400
++++ Zend/zend_execute_API.c	2007-08-16 08:12:27.225665000 -0400
+@@ -409,6 +409,8 @@
+ #if DEBUG_ZEND>=2
+ 	printf("Reducing refcount for %x (%x):  %d->%d\n", *zval_ptr, zval_ptr, (*zval_ptr)->refcount, (*zval_ptr)->refcount-1);
+ #endif
++        if (*zval_ptr == NULL)
++                return;
+ 	(*zval_ptr)->refcount--;
+ 	if ((*zval_ptr)->refcount==0) {
+ 		zval_dtor(*zval_ptr);
