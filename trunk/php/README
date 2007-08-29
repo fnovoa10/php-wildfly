@@ -37,3 +37,7 @@ Use in web.xml:
         <url-pattern>*.phps</url-pattern>
     </servlet-mapping>
 +++
+
+It is also possible to use it with jbossweb-1.0.* just copy jbossweb-extras.jar
+to server/default/deploy/jbossweb.sar, remove php-servlet.jar. Adjust server.xml and web.xml
+as decribed above.
