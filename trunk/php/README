@@ -1,0 +1,9 @@
+To use the php servlet with jbossas-4.2.x and jbossas-5.0.x you need to
+replace jbossas jbossweb-extras.jar by the one of provided by the php
+package.
+This is fixed in jbossweb 2.0.1.CR7 (so in jbossas since 4.2.2.GA and 5.0.0.Beta3).
+
+jbossweb-extras.jar also contains the RewriteValve.
+
+It is also possible to use it with jbossas-4.0.x just copy jbossweb-extras.jar
+to jbossweb-tomcat55.sar.
