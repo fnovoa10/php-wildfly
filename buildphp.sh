@@ -965,6 +965,10 @@ mkdir -p $TOOLS/server/default/deploy/jbossweb.sar
 cp -p php-examples.war $TOOLS/server/default/deploy/jbossweb.sar
 
 #
+# Copy the CHANGELOG, README and lastest jbossweb-extras.jar
+cp -p CHANGELOG README jbossweb-extras.jar $TOOLS
+
+#
 # Build a tarball with the all stuff
 (cd  $TOOLS/
  rm -f php5servlet.tar.gz
