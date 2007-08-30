@@ -5,6 +5,6 @@
  - improve test of errors in buildphp.sh.
 070720:
  - upgrade php to 5.2.3
- - upgrade php to 0.9.8e
+ - upgrade openssl to 0.9.8e
 070829:
  - add jbossweb-extras.jar from JBOSSWEB_2_0_1_CR7 and README
