@@ -973,7 +973,7 @@ cp -p CHANGELOG README jbossweb-extras.jar $TOOLS
 (cd  $TOOLS/
  rm -f php5servlet.tar.gz
  rm -f php5servlet.tar
- tar cvf php5servlet.tar PHP/lib server/default/deploy/jbossweb.sar/php-examples.war
+ tar cvf php5servlet.tar PHP/lib server/default/deploy/jbossweb.sar/php-examples.war CHANGELOG README jbossweb-extras.jar
  gzip -9 php5servlet.tar
 )
 
