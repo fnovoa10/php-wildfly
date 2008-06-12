@@ -10,13 +10,15 @@
 #
 
 PHPVER=5.2.3
-PHPURL=http://de.php.net/distributions/php-${PHPVER}.tar.gz
+#PHPURL=http://de.php.net/distributions/php-${PHPVER}.tar.gz
+PHPURL=http://museum.php.net/php5/php-${PHPVER}.tar.gz
 
 XML2VER=2.6.24
 XML2URL=ftp://xmlsoft.org/libxml2/libxml2-${XML2VER}.tar.gz
 
 PSQLVER=8.1.8
-PSQLURL=http://wwwmaster.postgresql.org/redir?ftp://ftp2.ch.postgresql.org/pub/postgresql/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
+#PSQLURL=http://wwwmaster.postgresql.org/redir?ftp://ftp2.ch.postgresql.org/pub/postgresql/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
+PSQLURL=ftp://ftp-archives.postgresql.org/pub/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
 
 OSSLVER="0.9.8e"
 OSSLURL=http://www.openssl.org/source/openssl-${OSSLVER}.tar.gz
@@ -33,8 +35,8 @@ GTTXURL=ftp://ftp.gnu.org/gnu/gettext/gettext-${GTTXVER}.tar.gz
 KRB5VER="1.4.3"
 KRB5URL=http://web.mit.edu/kerberos/dist/krb5/1.4/krb5-${KRB5VER}-signed.tar
 
-MSQLVER="4.1.20"
-MSQLURL=http://dev.mysql.com/get/Downloads/MySQL-4.1/mysql-4.1.20.tar.gz/from/http://mirror.switch.ch/ftp/mirror/mysql/
+MSQLVER="4.1.22"
+MSQLURL=http://dev.mysql.com/get/Downloads/MySQL-4.1/mysql-${MSQLVER}.tar.gz/from/http://mirror.switch.ch/ftp/mirror/mysql/
 #MSQLVER="5.0.22"
 #MSQLURL="http://dev.mysql.com/get/Downloads/MySQL-5.0/mysql-5.0.22.tar.gz/from/http://mirror.switch.ch/ftp/mirror/mysql/"
 
@@ -124,15 +126,23 @@ then
   case ${FILE} in
     *.tar.gz | *.tgz)
       gzip -dc ${FILE} | tar xvf -
+      if [ $? -ne 0 ];then
+        echo "gzip \"${FILE}\" failed"
+        exit 1
+      fi
       ;;
     *signed.tar)
       # MIT stuff
       tar xvf ${FILE}
       gzip -dc ${BASE}-${VER}.tar.gz | tar xvf -
+      if [ $? -ne 0 ];then
+        echo "gzip \"${FILE}\" failed"
+        exit 1
+      fi
       ;;
     *)
       # something else...
-      echo "Unknown format $FILE"
+      echo "Unknown format \"$FILE\" from Extract"
       exit 1
       ;;
   esac
@@ -140,6 +150,10 @@ then
   if [ -f patch/${BASE}-${VER}.patch ]
   then
     patch -p0 < patch/${BASE}-${VER}.patch
+    if [ $? -ne 0 ];then
+      echo "patch using  patch/${BASE}-${VER}.patch"
+      exit 1
+    fi
   fi
 fi
 }
@@ -482,8 +496,8 @@ esac
 if ${BUILDLZ}
 then
   # Extract and Build.
-  Extract zlib ${LZURL} ${LZVER}
-  Build zlib-${LZVER} ${TOOLS}/LZ "--shared" "clean" ""
+  Extract zlib ${LZURL} ${LZVER} || exit 1
+  Build zlib-${LZVER} ${TOOLS}/LZ "--shared" "clean" "" || exit 1
 fi
 
 #
@@ -496,8 +510,8 @@ then
   rm -f freetype-${FTT2VER}/builds/unix/freetype-config
   rm -f freetype-${FTT2VER}/builds/unix/freetype2.pc
   # Extract and Build.
-  Extract freetype ${FTT2URL} ${FTT2VER}
-  Build freetype-${FTT2VER} ${TOOLS}/FTT2 "--enable-shared" "clean+libtool" ""
+  Extract freetype ${FTT2URL} ${FTT2VER} || exit 1
+  Build freetype-${FTT2VER} ${TOOLS}/FTT2 "--enable-shared" "clean+libtool" "" || exit 1
   ADDCONF="$ADDCONF --with-freetype-dir=$TOOLS/FTT2"
   LGDCONF="$LGDCONF --with-freetype=$TOOLS/FTT2"
 else
@@ -508,8 +522,8 @@ fi
 # build iconv if required.
 if ${BUILDICNV}
 then
-  Extract libiconv ${ICNVURL} ${ICNVVER}
-  Build libiconv-${ICNVVER} ${TOOLS}/ICNV "--enable-shared" "clean" ""
+  Extract libiconv ${ICNVURL} ${ICNVVER} || exit 1
+  Build libiconv-${ICNVVER} ${TOOLS}/ICNV "--enable-shared" "clean" "" || exit 1
   ADDCONF="$ADDCONF --with-iconv-dir=$TOOLS/ICNV"
   LGDCONF="$LGDCONF --with-libiconv-prefix=$TOOLS/ICNV"
 fi
@@ -519,16 +533,16 @@ fi
 # Note the trick ADDCONF is filled before.
 if ${BUILDMSQL}
 then
-  Extract mysql ${MSQLURL} ${MSQLVER}
-  Build mysql-${MSQLVER} ${TOOLS}/MSQL "--enable-shared --enable-thread-safe-client" "clean" ""
+  Extract mysql ${MSQLURL} ${MSQLVER} || exit 1
+  Build mysql-${MSQLVER} ${TOOLS}/MSQL "--enable-shared --enable-thread-safe-client" "clean" "" || exit 1
 fi
 
 #
 # build kerberos if required.
 if ${BUILDKRB5}
 then
-  Extract krb5 ${KRB5URL} ${KRB5VER}
-  Build krb5-${KRB5VER} ${TOOLS}/KRB5 "--enable-shared --with-tcl=no" "clean" "src"
+  Extract krb5 ${KRB5URL} ${KRB5VER} || exit 1
+  Build krb5-${KRB5VER} ${TOOLS}/KRB5 "--enable-shared --with-tcl=no" "clean" "src" || exit 1
   ADDCONF="$ADDCONF --with-kerberos=$TOOLS/KRB5"
 else
   if ${ALLOWCRYPTO}
@@ -543,8 +557,8 @@ fi
 # build gettext if required.
 if ${BUILDGTTX}
 then
-  Extract gettext ${GTTXURL} ${GTTXVER}
-  Build gettext-${GTTXVER} ${TOOLS}/GTTX "--enable-shared" "clean" ""
+  Extract gettext ${GTTXURL} ${GTTXVER} || exit 1
+  Build gettext-${GTTXVER} ${TOOLS}/GTTX "--enable-shared" "clean" "" || exit 1
   ADDCONF="$ADDCONF --with-gettext=$TOOLS/GTTX"
 else
   ADDCONF="$ADDCONF --with-gettext"
@@ -560,8 +574,8 @@ then
   mkdir -p ${TOOLS}/JPEG/lib
   mkdir -p ${TOOLS}/JPEG/bin
   mkdir -p ${TOOLS}/JPEG/man/man1
-  Extract jpeg ${JPEGURL} ${JPEGVER}
-  Build jpeg-${JPEGVER} ${TOOLS}/JPEG "--enable-shared" "libtool" ""
+  Extract jpeg ${JPEGURL} ${JPEGVER} || exit 1
+  Build jpeg-${JPEGVER} ${TOOLS}/JPEG "--enable-shared" "libtool" "" || exit 1
   ADDCONF="$ADDCONF --with-jpeg-dir=$TOOLS/JPEG"
   LGDCONF="$LGDCONF --with-jpeg=$TOOLS/JPEG"
 else
@@ -572,8 +586,8 @@ fi
 # build lib png if required
 if ${BUILDLPNG}
 then
-  Extract libpng ${LPNGURL} ${LPNGVER}
-  Build libpng-${LPNGVER} ${TOOLS}/LPNG "" "clean"  ""
+  Extract libpng ${LPNGURL} ${LPNGVER} || exit 1
+  Build libpng-${LPNGVER} ${TOOLS}/LPNG "" "clean"  "" || exit 1
   ADDCONF="$ADDCONF --with-png-dir=$TOOLS/LPNG"
   LGDCONF="$LGDCONF --with-png=$TOOLS/LPNG"
   # libgd makes _very_ strange things with png.
@@ -593,13 +607,13 @@ fi
 # build libgd if required
 if ${BUILDLBGD}
 then
-  Extract gd ${LBGDURL} ${LBGDVER}
+  Extract gd ${LBGDURL} ${LBGDVER} || exit 1
   if ${BUILDLBGD}
   then
      LDFLAGS=-L$TOOLS/LZ/lib
      export LDFLAGS
   fi
-  Build gd-${LBGDVER} ${TOOLS}/LBGD "--without-xpm $LGDCONF"  "clean" ""
+  Build gd-${LBGDVER} ${TOOLS}/LBGD "--without-xpm $LGDCONF"  "clean" "" || exit 1
   ADDCONF="$ADDCONF --with-gd=$TOOLS/LBGD \
           --enable-gd-native-ttf \
           "
@@ -613,8 +627,8 @@ fi
 # build libxml2 if required
 if ${BUILDXML2}
 then
-  Extract libxml2 ${XML2URL} ${XML2VER}
-  Build libxml2-${XML2VER} ${TOOLS}/LIBXML2 "" "clean"  ""
+  Extract libxml2 ${XML2URL} ${XML2VER} || exit 1
+  Build libxml2-${XML2VER} ${TOOLS}/LIBXML2 "" "clean"  "" || exit 1
   ADDCONF="$ADDCONF --with-libxml-dir=$TOOLS/LIBXML2"
 else
   ADDCONF="$ADDCONF --with-libxml-dir"
@@ -624,7 +638,7 @@ fi
 # build openssl if required
 if ${BUILDOSSL}
 then
-  Extract openssl ${OSSLURL} ${OSSLVER}
+  Extract openssl ${OSSLURL} ${OSSLVER} || exit 1
   # Copied from buildworld.sh
   # Do we need --openssldir=
   (cd openssl-${OSSLVER}
@@ -657,20 +671,20 @@ fi
 # build openldap if required
 if ${BUILDLDAP}
 then
-  Extract openldap ${LDAPURL} ${LDAPVER}
+  Extract openldap ${LDAPURL} ${LDAPVER} || exit 1
   if ${BUILDOSSL}
   then
     CPPFLAGS=-I$TOOLS/SSL/include
     export CPPFLAGS
     LDFLAGS=-L$TOOLS/SSL/lib
     export LDFLAGS
-    Build openldap-${LDAPVER} ${TOOLS}/LDAP "--with-threads --disable-slapd --with-tls=openssl" "depend+clean" ""
+    Build openldap-${LDAPVER} ${TOOLS}/LDAP "--with-threads --disable-slapd --with-tls=openssl" "depend+clean" "" || exit 1
   else
     if ${ALLOWCRYPTO}
     then
-      Build openldap-${LDAPVER} ${TOOLS}/LDAP "--with-threads --disable-slapd --with-tls"  "depend+clean" ""
+      Build openldap-${LDAPVER} ${TOOLS}/LDAP "--with-threads --disable-slapd --with-tls"  "depend+clean" "" || exit 1
     else
-      Build openldap-${LDAPVER} ${TOOLS}/LDAP "--with-threads --disable-slapd --without-tls --with-kerberos=no"  "depend+clean" ""
+      Build openldap-${LDAPVER} ${TOOLS}/LDAP "--with-threads --disable-slapd --without-tls --with-kerberos=no --without-cyrus-sasl"  "depend+clean" "" || exit 1
     fi
   fi
   ADDCONF="$ADDCONF --with-ldap=$TOOLS/LDAP"
@@ -683,12 +697,12 @@ fi
 # postgres needs openssl
 if ${BUILDPSQL}
 then
-  Extract postgresql ${PSQLURL} ${PSQLVER}
+  Extract postgresql ${PSQLURL} ${PSQLVER} || exit 1
   if ${BUILDOSSL}
   then
-    Build postgresql-${PSQLVER} ${TOOLS}/POSTGRESQL "--without-readline LDFLAGS=-L${TOOLS}/SSL/lib"  "clean"  ""
+    Build postgresql-${PSQLVER} ${TOOLS}/POSTGRESQL "--without-readline LDFLAGS=-L${TOOLS}/SSL/lib"  "clean"  "" || exit 1
   else
-    Build postgresql-${PSQLVER} ${TOOLS}/POSTGRESQL --without-readline  "clean"  ""
+    Build postgresql-${PSQLVER} ${TOOLS}/POSTGRESQL --without-readline  "clean"  "" || exit 1
   fi
   ADDCONF="$ADDCONF --with-pgsql=$TOOLS/POSTGRESQL --with-pdo-pgsql=$TOOLS/POSTGRESQL/bin"
 else
@@ -697,7 +711,7 @@ fi
 
 #
 # get and extract php
-Extract php $PHPURL $PHPVER
+Extract php $PHPURL $PHPVER || exit 1
 
 echo "Adding to default configuration:: ${ADDCONF}"
 
