@@ -953,7 +953,11 @@ then
 fi
 if ${BUILDMSQL}
 then
-  Copy $TOOLS/MSQL/lib "lib*.so*" $TOOLS/PHP/lib
+  if [ -d $TOOLS/MSQL/lib/mysql ]; then
+    Copy $TOOLS/MSQL/lib/mysql "lib*.so*" $TOOLS/PHP/lib
+  else
+    Copy $TOOLS/MSQL/lib/ "lib*.so*" $TOOLS/PHP/lib
+  fi
 fi
 if ${BUILDLDAP}
 then
