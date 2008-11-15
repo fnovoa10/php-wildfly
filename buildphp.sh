@@ -9,27 +9,27 @@
 # There are windoze binaries
 #
 
-PHPVER=5.2.3
+PHPVER=5.2.6
 #PHPURL=http://de.php.net/distributions/php-${PHPVER}.tar.gz
 PHPURL=http://museum.php.net/php5/php-${PHPVER}.tar.gz
 
-XML2VER=2.6.24
+XML2VER=2.6.32
 XML2URL=ftp://xmlsoft.org/libxml2/libxml2-${XML2VER}.tar.gz
 
-PSQLVER=8.1.8
+PSQLVER=8.1.15
 #PSQLURL=http://wwwmaster.postgresql.org/redir?ftp://ftp2.ch.postgresql.org/pub/postgresql/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
 PSQLURL=ftp://ftp-archives.postgresql.org/pub/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
 
-OSSLVER="0.9.8e"
+OSSLVER="0.9.8i"
 OSSLURL=http://www.openssl.org/source/openssl-${OSSLVER}.tar.gz
 
-LPNGVER="1.2.10"
+LPNGVER="1.2.33"
 LPNGURL=http://kent.dl.sourceforge.net/sourceforge/libpng/libpng-${LPNGVER}.tar.gz
 
 JPEGVER="6b"
 JPEGURL=http://www.ijg.org/files/jpegsrc.v${JPEGVER}.tar.gz
 
-GTTXVER="0.14.5"
+GTTXVER="0.14.6"
 GTTXURL=ftp://ftp.gnu.org/gnu/gettext/gettext-${GTTXVER}.tar.gz
 
 KRB5VER="1.4.3"
@@ -40,16 +40,16 @@ MSQLURL=http://dev.mysql.com/get/Downloads/MySQL-4.1/mysql-${MSQLVER}.tar.gz/fro
 #MSQLVER="5.0.22"
 #MSQLURL="http://dev.mysql.com/get/Downloads/MySQL-5.0/mysql-5.0.22.tar.gz/from/http://mirror.switch.ch/ftp/mirror/mysql/"
 
-LDAPVER=2.2.13
+LDAPVER=2.2.30
 LDAPURL=http://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${LDAPVER}.tgz
 
 ICNVVER=1.9.2
 ICNVURL=http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${ICNVVER}.tar.gz
 
-FTT2VER=2.1.9
+FTT2VER=2.1.10
 FTT2URL=http://switch.dl.sourceforge.net/sourceforge/freetype/freetype-${FTT2VER}.tar.gz
 
-LBGDVER=2.0.28
+LBGDVER=2.0.33
 LBGDURL=http://www.boutell.com/gd/http/gd-${LBGDVER}.tar.gz
 
 LZVER=1.2.3
