@@ -8,6 +8,7 @@
 # Build php and its extensions
 # There are windoze binaries
 #
+BASESFLOC=http://downloads.sourceforge.net
 
 PHPVER=5.2.6
 #PHPURL=http://de.php.net/distributions/php-${PHPVER}.tar.gz
@@ -24,10 +25,11 @@ OSSLVER="0.9.8i"
 OSSLURL=http://www.openssl.org/source/openssl-${OSSLVER}.tar.gz
 
 LPNGVER="1.2.33"
-LPNGURL=http://kent.dl.sourceforge.net/sourceforge/libpng/libpng-${LPNGVER}.tar.gz
+LPNGURL=${BASESFLOC}/sourceforge/libpng/libpng-${LPNGVER}.tar.gz
 
 JPEGVER="6b"
-JPEGURL=http://www.ijg.org/files/jpegsrc.v${JPEGVER}.tar.gz
+#JPEGURL=http://www.ijg.org/files/jpegsrc.v${JPEGVER}.tar.gz
+JPEGURL=http://quirkysoft.googlecode.com/files/jpegsrc.v6b.tar.gz
 
 GTTXVER="0.14.6"
 GTTXURL=ftp://ftp.gnu.org/gnu/gettext/gettext-${GTTXVER}.tar.gz
@@ -47,7 +49,7 @@ ICNVVER=1.9.2
 ICNVURL=http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${ICNVVER}.tar.gz
 
 FTT2VER=2.1.10
-FTT2URL=http://switch.dl.sourceforge.net/sourceforge/freetype/freetype-${FTT2VER}.tar.gz
+FTT2URL=${BASESFLOC}/sourceforge/freetype/freetype-${FTT2VER}.tar.gz
 
 LBGDVER=2.0.33
 LBGDURL=http://www.boutell.com/gd/http/gd-${LBGDVER}.tar.gz
