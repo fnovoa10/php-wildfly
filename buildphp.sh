@@ -20,6 +20,8 @@ XML2URL=ftp://xmlsoft.org/libxml2/libxml2-${XML2VER}.tar.gz
 PSQLVER=8.1.15
 #PSQLURL=http://wwwmaster.postgresql.org/redir?ftp://ftp2.ch.postgresql.org/pub/postgresql/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
 PSQLURL=ftp://ftp-archives.postgresql.org/pub/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
+PSQLURL=ftp://ftp-archives.postgresql.org/pub/source/v${PSQLVER}/postgresql-${PSQLVER}.tar.gz
+PSQLURL=http://ftp4.fr.postgresql.org/pub/mirrors/postgresql/source/v8.1.15/postgresql-8.1.15.tar.gz
 
 OSSLVER="0.9.8i"
 OSSLURL=http://www.openssl.org/source/openssl-${OSSLVER}.tar.gz
